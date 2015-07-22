@@ -14,6 +14,7 @@ import os
 import glob
 import json
 import superdesk
+from bson.objectid import ObjectId
 
 
 class ThemesResource(Resource):
@@ -81,6 +82,29 @@ class ThemesService(BaseService):
                 created.append(theme)
         return (created, updated)
 
+    def on_delete(self, doc):
+        print('doc', doc)
+#         theme = get_resource_service('themes').find_one(req=None, _id=doc['_id'])
+#         get_resource_service('themes').delete(lookup=doc['_id'])
+        blogs_service = get_resource_service('blogs')
+        blogs = blogs_service.get(req=None, lookup=dict(blog_status='open'))
+        for blog in blogs:
+            print('bbtt', blog['theme'])
+#             daca id ul temei blogului este acelasi cu id-ul temei pe care o sterg atunci tema blogului va deveni default
+            a = ObjectId(blog['theme']['_id'])
+            b = doc['_id']
+#             print('blog id', blog['theme']['_id'])
+#             print('theme id', doc['_id'])
+            if a == b:
+                print('daa')
+            else:
+                print('nuuu')
+#             if blog['theme']['_id'] == doc['_id']:
+                
+                
+        
+
+        
 
 class ThemesCommand(superdesk.Command):
 
