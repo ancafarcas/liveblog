@@ -14,6 +14,8 @@ import os
 import glob
 import json
 import superdesk
+from eve.utils import config
+from bson.objectid import ObjectId
 
 
 class ThemesResource(Resource):
@@ -81,6 +83,20 @@ class ThemesService(BaseService):
                 created.append(theme)
         return (created, updated)
 
+    def remove_theme(self, doc):
+        doc_id = doc['_id']
+        get_resource_service('themes').delete(lookup={doc_id})
+        blogs_service = get_resource_service('blogs')
+        blogs = blogs_service.get(req=None, lookup=dict(blog_status='open'))
+        doc_id = str(doc[config.ID_FIELD])
+        for blog in blogs:
+            theme = blogs_service.get_theme_snapshot(blog['blog_preferences']['theme'])
+            global_prefs = get_resource_service('global_preferences').get_global_prefs()
+            default_theme = global_prefs.get('theme')
+            print('the theme for the blog %s is: %s' % (blog['title'], theme['name']))
+            if not theme['name'] != doc['name']:
+                blogs_service.system_update(ObjectId(blog['_id']), {'theme': default_theme}, blog)
+
 
 class ThemesCommand(superdesk.Command):
 
@@ -99,3 +115,18 @@ class ThemesCommand(superdesk.Command):
 
 
 superdesk.command('register_local_themes', ThemesCommand())
+
+
+class ThemesRemoveCommand(superdesk.Command):
+
+    def run(self):
+        self.remove_theme_locally()
+
+    def remove_theme_locally(self):
+        items = ThemesService.get_local_themes_packages(self)
+        for item in items:
+            it = superdesk.get_resource_service('themes').find_one(req=None, name=item['name'])
+            superdesk.get_resource_service('themes').remove_theme(it)
+
+
+superdesk.command('remove_theme', ThemesRemoveCommand())
