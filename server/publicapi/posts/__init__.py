@@ -9,16 +9,15 @@
 # at https://www.sourcefabric.org/superdesk/license
 
 import superdesk
-from publicapi.packages.service import PackagesService
-from publicapi.packages.resource import PackagesResource
-
+from server.publicapi.posts.service import PostsService
+from server.publicapi.posts.resource import PostsResource
 
 def init_app(app):
-    """Initialize the `packages` API endpoint.
+    """Initialize the `items` API endpoint.
 
     :param app: the API application object
     :type app: `Eve`
     """
-    endpoint_name = 'packages'
-    service = PackagesService(endpoint_name, backend=superdesk.get_backend())
-    PackagesResource(endpoint_name, app=app, service=service)
+    endpoint_name = 'posts'
+    service = PostsService(endpoint_name, backend=superdesk.get_backend())
+    PostsResource(endpoint_name, app=app, service=service)

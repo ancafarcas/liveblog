@@ -12,21 +12,21 @@ from superdesk.resource import Resource
 
 
 
-class BlogsResource(Resource):
-    """A class defining and configuring the /blogs API endpoint."""
+class PostsResource(Resource):
+    """A class defining and configuring the /posts API endpoint."""
 
     item_url = 'regex("[\w,.:-]+")'
 
 
     schema = {
-        'title': {'type': 'string'},
-        'description': {'type': 'string'},
-        'language': {'type': 'string'}       
+        'headline': {'type': 'string'},
+        'post_status': {'type': 'string'}
+#         'published_date': {'type': 'datetime'} 
     }
 
     datasource = {
         'source': 'archive',
-        'elastic_filter': {'term': {'particular_type': 'blog'}},
+        'elastic_filter': {'term': {'particular_type': 'post'}},
         'default_sort': [('_updated', -1)]
     }
 

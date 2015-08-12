@@ -1,5 +1,4 @@
 {
-    "_id": "tag:demodata.org,0001:ninjs_XYZ123",
     "type": "picture",
     "version": "v3",
     "versioncreated": {"$date": "2015-03-16T08:12:00Z"},

@@ -39,10 +39,10 @@ ELASTICSEARCH_INDEX = env('ELASTICSEARCH_INDEX', MONGO_DBNAME)
 ELASTIC_DATE_FORMAT = '%Y-%m-%d'
 
 INSTALLED_APPS = [
-    'publicapi.items',
-    'publicapi.packages',
     'publicapi.prepopulate',
-    'publicapi.assets'
+    'publicapi.assets',
+    'publicapi.blogs',
+    'publicapi.posts'
 ]
 
 DOMAIN = {}

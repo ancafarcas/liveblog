@@ -17,21 +17,21 @@ from eve.utils import ParsedRequest
 from flask import current_app as app
 from flask import request
 from publicapi.errors import BadParameterValueError, UnexpectedParameterError
-from publicapi.items import ItemsResource
 from superdesk.services import BaseService
 from superdesk.utc import utcnow
 from urllib.parse import urljoin, urlparse, quote
 from werkzeug.datastructures import MultiDict
 from publicapi.assets import url_for_media
 from publicapi.settings import ELASTIC_DATE_FORMAT
+from server.publicapi.posts.resource import PostsResource
 
 
 logger = logging.getLogger(__name__)
 
 
-class ItemsService(BaseService):
+class PostsService(BaseService):
     """
-    A service that knows how to perform CRUD operations on the `item`
+    A service that knows how to perform CRUD operations on the `posts`
     content types.
 
     Serves mainly as a proxy to the data layer.
@@ -378,7 +378,7 @@ class ItemsService(BaseService):
         if include_fields is not None:
             err_msg = 'Unknown content field to include ({}).'
             for field in include_fields:
-                if field not in ItemsResource.schema:
+                if field not in PostsResource.schema:
                     raise BadParameterValueError(desc=err_msg.format(field))
 
         if exclude_fields is not None:
@@ -389,7 +389,7 @@ class ItemsService(BaseService):
 
             err_msg = 'Unknown content field to exclude ({}).'
             for field in exclude_fields:
-                if field not in ItemsResource.schema:
+                if field not in PostsResource.schema:
                     raise BadParameterValueError(desc=err_msg.format(field))
 
         return include_fields, exclude_fields
