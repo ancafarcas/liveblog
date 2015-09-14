@@ -13,6 +13,7 @@ import flask
 from superdesk.utc import utcnow
 from apps.users.services import current_user_has_privilege
 from superdesk.errors import SuperdeskApiError
+from superdesk.activity import add_activity
 
 DEFAULT_POSTS_ORDER = [('order', -1), ('firstcreated', -1)]
 
@@ -130,12 +131,20 @@ class PostsService(ArchiveService):
         super().on_create(docs)
 
     def on_created(self, docs):
+        users = []
+        users_service = get_resource_service('users')
+        all_users = users_service.get(req=None, lookup=None)
+        for u in all_users:
+            users.append(u['_id'])
         super().on_created(docs)
         # invalidate cache for updated blog
         for doc in docs:
             app.blog_cache.invalidate(doc.get('blog'))
         # send notifications
-        push_notification('posts', created=True)
+        if doc.get('post_status') == 'submitted':
+            add_activity('notify', 'a new contribution has been added', resource=None, item=doc, notify=users)
+        else:
+            push_notification('posts', created=True)
 
     def on_update(self, updates, original):
         # check permission
