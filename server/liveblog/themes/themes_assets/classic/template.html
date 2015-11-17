@@ -1,7 +1,7 @@
 
 <div class="lb-timeline" ng-app="theme" ng-controller="TimelineCtrl as timeline">
     <div class="content">
-        <h1 ng-bind="timeline.blog.title">
+        <h1 ng-bind="timeline.blog.description">
         </h1>
         <div class="illustration">
             <img ng-src="{{ timeline.blog.picture_url }}"/>
@@ -33,7 +33,7 @@
     <div
         class="lb-post emtpy-message ng-cloak"
         ng-show="timeline.pagesManager.allPosts().length < 1 && !timeline.loading">
-        <div class="content">No post for now.</div>
+        <div class="content">Right now the balance is on 0.</div>
     </div>
     <ul
         class="lb-posts list-group"
